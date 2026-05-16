@@ -1,0 +1,338 @@
+}<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Young Hats — Diseña tu gorra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gyastatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       HEADER / NAV
+  ═══════════════════════════════════════════ -->
+  <header class="header">
+    <nav class="nav">
+      <div class="nav__logo">
+        <span class="nav__logo-text">Young Hats</span>
+      </div>
+      <ul class="nav__links">
+        <li><a href="#configurador">Configurador</a></li>
+        <li><a href="#como-funciona">Cómo funciona</a></li>
+        <li><a href="#pedir" class="nav__cta">Pedir mi gorra</a></li>
+      </ul>
+      <button class="btn-tema" id="btn-tema" aria-label="Cambiar tema">
+        <span class="btn-tema__icono btn-tema__icono--luna">☽</span>
+        <span class="btn-tema__icono btn-tema__icono--sol">○</span>
+        <span class="btn-tema__pista">Modo claro</span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ═══════════════════════════════════════════
+         HERO
+    ═══════════════════════════════════════════ -->
+    <section class="hero">
+      <!-- Grain overlay -->
+      <div class="hero__grain" aria-hidden="true"></div>
+
+      <div class="hero__inner">
+        <div class="hero__content">
+          <p class="hero__eyebrow">Colección 2026</p>
+          <h1 class="hero__titulo">
+            <span class="hero__titulo-linea">Tu</span>
+            <span class="hero__titulo-linea hero__titulo-linea--acento">gorra.</span>
+            <span class="hero__titulo-linea">Tu estilo.</span>
+          </h1>
+          <p class="hero__subtitulo">Diseñala como quieras.<br/>Nosotros la hacemos realidad.</p>
+          <div class="hero__acciones">
+            <a href="#configurador" class="btn btn--primario">Diseñar ahora</a>
+            <a href="#como-funciona" class="btn btn--ghost">Ver cómo funciona</a>
+          </div>
+        </div>
+
+        <!-- Gorra hero -->
+        <div class="hero__visual">
+          <img
+            src="img/gorra_blanca_fondo_blanco.png"
+            alt="Gorra Young Hats vista lateral"
+            class="hero__img"
+          />
+          <div class="hero__deco" aria-hidden="true">
+            <div class="hero__deco-linea"></div>
+            <p class="hero__deco-tag">Made to order</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra inferior del hero -->
+      <div class="hero__barra">
+        <span>Snapback</span>
+        <span class="hero__barra-sep">·</span>
+        <span>Trucker</span>
+        <span class="hero__barra-sep">·</span>
+        <span>100% Personalizable</span>
+        <span class="hero__barra-sep">·</span>
+        <span>Envío a todo México</span>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         TICKER
+    ═══════════════════════════════════════════ -->
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker__track">
+        <span>Young Hats</span>
+        <span class="ticker__sep">★</span>
+        <span>Hecho a tu medida</span>
+        <span class="ticker__sep">★</span>
+        <span>Snapback</span>
+        <span class="ticker__sep">★</span>
+        <span>Trucker</span>
+        <span class="ticker__sep">★</span>
+        <span>Young Hats</span>
+        <span class="ticker__sep">★</span>
+        <span>Hecho a tu medida</span>
+        <span class="ticker__sep">★</span>
+        <span>Snapback</span>
+        <span class="ticker__sep">★</span>
+        <span>Trucker</span>
+        <span class="ticker__sep">★</span>
+        <!-- duplicado para loop continuo -->
+        <span>Young Hats</span>
+        <span class="ticker__sep">★</span>
+        <span>Hecho a tu medida</span>
+        <span class="ticker__sep">★</span>
+        <span>Snapback</span>
+        <span class="ticker__sep">★</span>
+        <span>Trucker</span>
+        <span class="ticker__sep">★</span>
+        <span>Young Hats</span>
+        <span class="ticker__sep">★</span>
+        <span>Hecho a tu medida</span>
+        <span class="ticker__sep">★</span>
+        <span>Snapback</span>
+        <span class="ticker__sep">★</span>
+        <span>Trucker</span>
+        <span class="ticker__sep">★</span>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         SECCIÓN CONFIGURADOR
+    ═══════════════════════════════════════════ -->
+    <section class="seccion-configurador" id="configurador">
+      <div class="seccion-configurador__header">
+        <p class="seccion-label">/ 01 — Configurador</p>
+        <h2 class="seccion-titulo">Diseña la tuya</h2>
+      </div>
+
+      <div class="configurador-wrapper">
+
+        <!-- Preview de la gorra -->
+        <div class="configurador__preview">
+          <div class="preview__marco">
+            <div id="configurador-svg">
+              <!-- Imagen principal del preview -->
+              <img
+                id="preview-principal"
+                src="img/gorra_blanca_fondo_blanco_de_frente.png"
+                alt="Preview gorra"
+                class="preview__img"
+              />
+            </div>
+          </div>
+
+          <!-- Miniaturas de vista — mismo tipo de gorra -->
+          <div class="preview__thumbs">
+            <button class="thumb activo" data-src="img/gorra_blanca_fondo_blanco_de_frente.png" aria-label="Vista de frente">
+              <img src="img/gorra_blanca_fondo_blanco_de_frente.png" alt="Frente" />
+              <span>Frente</span>
+            </button>
+            <button class="thumb" data-src="img/gorra_blanca_fondo_blanco.png" aria-label="Vista lateral">
+              <img src="img/gorra_blanca_fondo_blanco.png" alt="Lateral" />
+              <span>Lateral</span>
+            </button>
+          </div>
+
+          <!-- Selector de modelo -->
+          <div class="selector-modelo">
+            <span class="selector-modelo__label">Modelo:</span>
+            <button class="btn-modelo activo" data-modelo="normal">Normal</button>
+            <button class="btn-modelo" data-modelo="puma">Puma</button>
+          </div>
+        </div>
+
+        <!-- Panel de controles lateral -->
+        <aside class="configurador__panel">
+
+          <div class="panel__cabecera">
+            <h2 class="panel__titulo">Personaliza</h2>
+            <span class="panel__badge">En vivo</span>
+          </div>
+
+          <div class="panel__divisor"></div>
+
+          <!-- Color del cuerpo -->
+          <div class="control-grupo">
+            <label class="control-label">
+              <span class="control-label__punto"></span>
+              Color del cuerpo
+            </label>
+            <div class="paleta" id="paleta-cuerpo"></div>
+            <button class="btn-agregar-color" data-target="cuerpo">+ Agregar color personalizado</button>
+          </div>
+
+          <!-- Color de la visera -->
+          <div class="control-grupo">
+            <label class="control-label">
+              <span class="control-label__punto"></span>
+              Color de la visera
+            </label>
+            <div class="paleta" id="paleta-visera"></div>
+            <button class="btn-agregar-color" data-target="visera">+ Agregar color personalizado</button>
+          </div>
+
+          <!-- Color del ojete -->
+          <div class="control-grupo">
+            <label class="control-label">
+              <span class="control-label__punto"></span>
+              Color del ojete
+            </label>
+            <div class="paleta" id="paleta-ojete"></div>
+            <button class="btn-agregar-color" data-target="ojete">+ Agregar color personalizado</button>
+          </div>
+
+          <div class="panel__divisor"></div>
+
+          <!-- Texto del bordado -->
+          <div class="control-grupo">
+            <label class="control-label" for="input-bordado">
+              <span class="control-label__punto"></span>
+              Texto bordado
+            </label>
+            <input
+              type="text"
+              class="input-bordado"
+              id="input-bordado"
+              placeholder="Ej. YOUNG HATS"
+              maxlength="20"
+            />
+          </div>
+
+          <!-- Color del bordado -->
+          <div class="control-grupo">
+            <label class="control-label">
+              <span class="control-label__punto"></span>
+              Color del bordado
+            </label>
+            <div class="paleta" id="paleta-bordado"></div>
+            <button class="btn-agregar-color" data-target="bordado">+ Agregar color personalizado</button>
+          </div>
+
+          <div class="panel__divisor"></div>
+
+          <a href="#pedir" class="btn btn--primario btn--full">Pedir esta gorra →</a>
+
+        </aside>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         CÓMO FUNCIONA
+    ═══════════════════════════════════════════ -->
+    <section class="como-funciona" id="como-funciona">
+      <div class="como-funciona__inner">
+        <div class="como-funciona__header">
+          <p class="seccion-label">/ 02 — Proceso</p>
+          <h2 class="seccion-titulo">¿Cómo funciona?</h2>
+        </div>
+
+        <div class="pasos">
+          <div class="paso">
+            <!-- Puma: frente + lateral juntos -->
+            <div class="paso__galeria">
+              <img src="img/gorra_blanca_fondo_blanco_de_frente_puma.png" alt="Frente" class="paso__img" />
+              <img src="img/gorra_blanca_fondo_blanco_de_lado_puma.png" alt="Lateral" class="paso__img" />
+            </div>
+            <span class="paso__numero">01</span>
+            <div class="paso__cuerpo">
+              <h3 class="paso__titulo">Elige tu modelo</h3>
+              <p class="paso__desc">Snapback o Trucker — tú decides la base de tu gorra.</p>
+            </div>
+          </div>
+          <div class="paso">
+            <!-- Plain: frente + lateral juntos -->
+            <div class="paso__galeria">
+              <img src="img/gorra_blanca_fondo_blanco_de_frente.png" alt="Frente" class="paso__img" />
+              <img src="img/gorra_blanca_fondo_blanco.png" alt="Lateral" class="paso__img" />
+            </div>
+            <span class="paso__numero">02</span>
+            <div class="paso__cuerpo">
+              <h3 class="paso__titulo">Personaliza</h3>
+              <p class="paso__desc">Colores del cuerpo, visera, ojete y bordado a tu gusto.</p>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso__numero">03</span>
+            <div class="paso__cuerpo">
+              <h3 class="paso__titulo">Pide la tuya</h3>
+              <p class="paso__desc">Mandamos tu diseño al taller y te lo entregamos.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         CTA FINAL — PEDIR MI GORRA
+    ═══════════════════════════════════════════ -->
+    <section class="cta-final" id="pedir">
+      <div class="cta-final__grain" aria-hidden="true"></div>
+      <div class="cta-final__inner">
+        <div class="cta-final__texto">
+          <p class="seccion-label">/ 03 — Pedido</p>
+          <h2 class="cta-final__titulo">¿Lista<br/>tu gorra?</h2>
+          <p class="cta-final__subtitulo">Mándanos tu diseño y te contactamos en menos de 24 horas.</p>
+        </div>
+        <form class="cta-final__form">
+          <div class="form-grupo">
+            <label class="form-label" for="f-nombre">Nombre</label>
+            <input type="text" id="f-nombre" placeholder="Tu nombre" class="input-form" />
+          </div>
+          <div class="form-grupo">
+            <label class="form-label" for="f-correo">Correo</label>
+            <input type="email" id="f-correo" placeholder="tu@correo.com" class="input-form" />
+          </div>
+          <div class="form-grupo">
+            <label class="form-label" for="f-nota">Notas</label>
+            <textarea id="f-nota" placeholder="Detalles adicionales de tu pedido..." class="input-form input-form--textarea"></textarea>
+          </div>
+          <button type="submit" class="btn btn--primario btn--full">Enviar pedido →</button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════ -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <span class="footer__marca">Young Hats</span>
+      <p class="footer__copy">© 2026 — Todos los derechos reservados.</p>
+      <p class="footer__copy">Hecho a mano. Diseñado por ti.</p>
+    </div>
+  </footer>
+
+  <script src="js/configurador.js"></script>
+  <script src="js/tema.js"></script>
+
+</body>
+</html>
