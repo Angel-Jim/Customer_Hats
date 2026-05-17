@@ -1088,3 +1088,76 @@ body, .header, .btn-tema, .configurador__panel,
     border-color 0.3s ease,
     color 0.3s ease;
 }
+
+/* ═══════════════════ CANVAS DEL CONFIGURADOR ═══════════════════ */
+.gorra-canvas {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  aspect-ratio: 4 / 3;
+  margin: 0 auto;
+  isolation: isolate; /* Crítico: aísla los blend modes del contexto exterior */
+}
+
+.gorra-canvas > * {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.gorra-canvas__base {
+  z-index: 1;
+  object-fit: contain;
+}
+
+.gorra-canvas__color {
+  z-index: 2;
+  background: #FFFFFF;
+  mix-blend-mode: multiply;
+
+  /* Máscara - versión con prefijo (Chromium/Safari/Brave) */
+  -webkit-mask-image: url('../img/mascaras/snapback-puma-mascara.png');
+  -webkit-mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+
+  /* Máscara - versión estándar (Firefox y navegadores futuros) */
+  mask-image: url('../img/mascaras/snapback-puma-mascara.png');
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  mask-position: center;
+
+  pointer-events: none;
+  transition: background 0.25s ease;
+}
+
+.gorra-canvas__bordado {
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 38%;
+  left: 0;
+  right: 0;
+  height: auto;
+  font-family: 'Arial Black', 'Helvetica Neue', sans-serif;
+  font-size: clamp(16px, 3vw, 32px);
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.4),
+    0 -1px 0 rgba(255, 255, 255, 0.15);
+  pointer-events: none;
+  text-align: center;
+}
+
+/* Estados deshabilitados: miniaturas de vista y botón modelo Normal */
+.thumb--disabled,
+.btn-modelo--disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  pointer-events: none;
+}

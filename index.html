@@ -1,4 +1,4 @@
-}<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -138,33 +138,32 @@
         <div class="configurador__preview">
           <div class="preview__marco">
             <div id="configurador-svg">
-              <!-- Imagen principal del preview -->
-              <img
-                id="preview-principal"
-                src="img/gorra_blanca_fondo_blanco_de_frente.png"
-                alt="Preview gorra"
-                class="preview__img"
-              />
+              <!-- Canvas en capas: base + tinte + bordado -->
+              <div class="gorra-canvas">
+                <img class="gorra-canvas__base" src="img/gorra_blanca_fondo_blanco_de_lado_puma.png" alt="Vista previa de tu gorra">
+                <div class="gorra-canvas__color"></div>
+                <span class="gorra-canvas__bordado"></span>
+              </div>
             </div>
           </div>
 
-          <!-- Miniaturas de vista — mismo tipo de gorra -->
+          <!-- Miniaturas de vista — Funcionalidad pendiente: cambio de vista -->
           <div class="preview__thumbs">
-            <button class="thumb activo" data-src="img/gorra_blanca_fondo_blanco_de_frente.png" aria-label="Vista de frente">
-              <img src="img/gorra_blanca_fondo_blanco_de_frente.png" alt="Frente" />
-              <span>Frente</span>
-            </button>
-            <button class="thumb" data-src="img/gorra_blanca_fondo_blanco.png" aria-label="Vista lateral">
-              <img src="img/gorra_blanca_fondo_blanco.png" alt="Lateral" />
+            <button class="thumb thumb--disabled activo" data-src="img/gorra_blanca_fondo_blanco_de_lado_puma.png" aria-label="Vista lateral" disabled>
+              <img src="img/gorra_blanca_fondo_blanco_de_lado_puma.png" alt="Lateral" />
               <span>Lateral</span>
+            </button>
+            <button class="thumb thumb--disabled" data-src="img/gorra_blanca_fondo_blanco_de_frente_puma.png" aria-label="Vista de frente" disabled>
+              <img src="img/gorra_blanca_fondo_blanco_de_frente_puma.png" alt="Frente" />
+              <span>Frente</span>
             </button>
           </div>
 
-          <!-- Selector de modelo -->
+          <!-- Selector de modelo — Funcionalidad pendiente: modelo Normal -->
           <div class="selector-modelo">
             <span class="selector-modelo__label">Modelo:</span>
-            <button class="btn-modelo activo" data-modelo="normal">Normal</button>
-            <button class="btn-modelo" data-modelo="puma">Puma</button>
+            <button class="btn-modelo btn-modelo--disabled" data-modelo="normal" disabled>Normal</button>
+            <button class="btn-modelo activo" data-modelo="puma">Puma</button>
           </div>
         </div>
 
@@ -178,35 +177,16 @@
 
           <div class="panel__divisor"></div>
 
-          <!-- Color del cuerpo -->
+          <!-- Color de la gorra (unificado: cuerpo + visera + ojete) -->
           <div class="control-grupo">
             <label class="control-label">
               <span class="control-label__punto"></span>
-              Color del cuerpo
+              Color de la gorra
             </label>
             <div class="paleta" id="paleta-cuerpo"></div>
-            <button class="btn-agregar-color" data-target="cuerpo">+ Agregar color personalizado</button>
           </div>
 
-          <!-- Color de la visera -->
-          <div class="control-grupo">
-            <label class="control-label">
-              <span class="control-label__punto"></span>
-              Color de la visera
-            </label>
-            <div class="paleta" id="paleta-visera"></div>
-            <button class="btn-agregar-color" data-target="visera">+ Agregar color personalizado</button>
-          </div>
-
-          <!-- Color del ojete -->
-          <div class="control-grupo">
-            <label class="control-label">
-              <span class="control-label__punto"></span>
-              Color del ojete
-            </label>
-            <div class="paleta" id="paleta-ojete"></div>
-            <button class="btn-agregar-color" data-target="ojete">+ Agregar color personalizado</button>
-          </div>
+          <!-- Paletas separadas (visera, ojete) removidas en iteración 1. Reactivar si se requiere control granular. -->
 
           <div class="panel__divisor"></div>
 
@@ -221,7 +201,7 @@
               class="input-bordado"
               id="input-bordado"
               placeholder="Ej. YOUNG HATS"
-              maxlength="20"
+              maxlength="12"
             />
           </div>
 
@@ -232,11 +212,11 @@
               Color del bordado
             </label>
             <div class="paleta" id="paleta-bordado"></div>
-            <button class="btn-agregar-color" data-target="bordado">+ Agregar color personalizado</button>
           </div>
 
           <div class="panel__divisor"></div>
 
+          <button type="button" class="btn btn--ghost btn--full btn--reset">Reiniciar diseño</button>
           <a href="#pedir" class="btn btn--primario btn--full">Pedir esta gorra →</a>
 
         </aside>

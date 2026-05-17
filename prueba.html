@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prueba máscara SVG</title>
+  <style>
+
+    body {
+      background: #1a1a1a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      font-family: sans-serif;
+      gap: 2rem;
+    }
+
+    /* ── Contenedor principal ── */
+    .gorra-canvas {
+      position: relative;
+      width: 500px;
+      aspect-ratio: 4 / 3;
+      isolation: isolate;
+    }
+
+    /* ── Todas las capas apiladas ── */
+    .gorra-canvas > * {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ── Capa 1: foto base ── */
+    .gorra-canvas__base {
+      z-index: 1;
+      object-fit: contain;
+    }
+
+    /* ── Capa 2: color (con máscara SVG) ── */
+    .gorra-canvas__color {
+      z-index: 2;
+      background: #FFFFFF;
+      mix-blend-mode: multiply;
+      margin-top: 46px;
+      height: 288px;
+
+      pointer-events: none;
+      transition: background 0.25s ease;
+    }
+
+    /* ── Capa 3: texto bordado ── */
+    .gorra-canvas__bordado {
+      z-index: 5;
+      position: absolute;
+      margin-bottom: 155px;
+      top: 45%;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Arial Black', sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #FFFFFF;
+      text-shadow:
+        0 1px 0 rgba(0,0,0,0.4),
+        0 -1px 0 rgba(255,255,255,0.15);
+      pointer-events: none;
+      height: auto;
+      width: 100%;
+    }
+
+    /* ── Capa 4: logo subido por el usuario ── */
+    .gorra-canvas__logo {
+      position: absolute;
+      z-index: 4;
+      width: 22%;
+      max-height: 55px;
+      object-fit: contain;
+      left: 50%;
+      transform: translateX(-50%);
+      top: calc(45% - 55px - 15px);
+      display: none;
+    }
+
+    .gorra-canvas__logo.visible {
+      display: block;
+    }
+
+    /* ── Selector de vistas (thumbnails) ── */
+    .selector-vistas {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .thumb-vista {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      background: transparent;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      padding: 0.4rem;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      color: white;
+      font-size: 0.75rem;
+    }
+
+    .thumb-vista img {
+      width: 80px;
+      height: 60px;
+      object-fit: contain;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .thumb-vista.activo { border-color: white; }
+    .thumb-vista:hover  { border-color: rgba(255,255,255,0.5); }
+
+    /* ── Controles ── */
+    .controles {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.2rem;
+      color: white;
+    }
+
+    .paleta {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .swatch {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+
+    .swatch:hover { transform: scale(1.15); }
+
+    .swatch.activo {
+      border-color: white;
+      transform: scale(1.15);
+    }
+
+    input[type="text"] {
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      border: none;
+      font-size: 1rem;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    button {
+      padding: 0.5rem 1.5rem;
+      border-radius: 6px;
+      border: 1px solid white;
+      background: transparent;
+      color: white;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    button:hover { background: rgba(255,255,255,0.1); }
+
+  </style>
+</head>
+<body>
+
+  <!-- Selector de vistas -->
+  <div class="selector-vistas">
+    <button class="thumb-vista activo" data-vista="frente">
+      <img src="img/gorra_blanca_fondo_blanco_de_frente.png" alt="Vista frontal">
+      <span>Frontal</span>
+    </button>
+    <button class="thumb-vista" data-vista="lateral">
+      <img src="img/gorra_blanca_fondo_blanco.png" alt="Vista lateral">
+      <span>Lateral</span>
+    </button>
+  </div>
+
+  <!-- Canvas de la gorra -->
+  <div class="gorra-canvas">
+    <img
+      class="gorra-canvas__base"
+      src="img/gorra_blanca_fondo_blanco_de_frente.png"
+      alt="Vista previa de tu gorra"
+    >
+    <div class="gorra-canvas__color"></div>
+    <img class="gorra-canvas__logo" id="preview-logo" src="" alt="">
+    <span class="gorra-canvas__bordado"></span>
+  </div>
+
+  <!-- Controles -->
+  <div class="controles">
+
+    <label>Color de la gorra:</label>
+    <div class="paleta" id="paleta-colores"></div>
+
+    <label>Logo (PNG con fondo transparente):</label>
+    <input type="file" id="input-logo" accept="image/png,image/svg+xml">
+    <button id="btn-quitar-logo">Quitar logo</button>
+
+    <label>Texto bordado:</label>
+    <input
+      type="text"
+      id="input-texto"
+      maxlength="12"
+      placeholder="YOUNG HATS"
+    >
+
+    <label>Color del bordado:</label>
+    <div class="paleta" id="paleta-bordado"></div>
+
+    <button id="btn-reset">Reiniciar</button>
+
+  </div>
+
+  <script>
+    /* ══════════════════════════════════
+       PRUEBA DE MÁSCARA SVG
+       Young Hats — Configurador
+    ══════════════════════════════════ */
+
+    const COLORES_GORRA = [
+      '#FFFFFF', // Blanco
+      '#000000', // Negro
+      '#1A1A2E', // Azul marino
+      '#8B0000', // Vino
+      '#D4AF37', // Mostaza
+      '#C0392B', // Rojo
+      '#2D5016', // Verde oliva
+      '#6B4423', // Café
+    ];
+
+    const COLORES_BORDADO = [
+      '#FFFFFF', // Blanco
+      '#000000', // Negro
+      '#D4AF37', // Dorado
+      '#C0392B', // Rojo
+    ];
+
+    const VISTAS = {
+      frente: {
+        imagen:       'img/gorra_blanca_fondo_blanco_de_frente.png',
+        mascara:      'img/mascaras/gorra-frente-mascara.svg',
+        maskSize:     'auto 90%',
+        maskPosition: 'center',
+        maskRepeat:   'no-repeat',
+      },
+      lateral: {
+        imagen:       'img/gorra_blanca_fondo_blanco.png',
+        mascara:      'img/mascaras/gorra-lateral-mascara.svg',
+        maskSize:     '100% 100%',
+        maskPosition: 'center',
+        maskRepeat:   'no-repeat',
+      }
+    };
+
+    // Estado
+    let estado = {
+      colorGorra:   '#FFFFFF',
+      colorBordado: '#FFFFFF',
+      texto: '',
+      logoSrc: '',
+      vistaActual: 'frente',
+    };
+
+    // Referencias DOM
+    const $capaColor     = document.querySelector('.gorra-canvas__color');
+    const $bordado       = document.querySelector('.gorra-canvas__bordado');
+    const $inputTexto    = document.getElementById('input-texto');
+    const $btnReset      = document.getElementById('btn-reset');
+    const $logo          = document.getElementById('preview-logo');
+    const $inputLogo     = document.getElementById('input-logo');
+    const $btnQuitarLogo = document.getElementById('btn-quitar-logo');
+
+    /* ── Render ── */
+    function render() {
+      const vista = VISTAS[estado.vistaActual];
+
+      /* imagen base */
+      document.querySelector('.gorra-canvas__base').src = vista.imagen;
+
+      /* máscara — todos los valores dinámicos por vista */
+      $capaColor.style.webkitMaskImage    = "url('" + vista.mascara + "')";
+      $capaColor.style.maskImage          = "url('" + vista.mascara + "')";
+      $capaColor.style.webkitMaskSize     = vista.maskSize;
+      $capaColor.style.maskSize           = vista.maskSize;
+      $capaColor.style.webkitMaskPosition = vista.maskPosition;
+      $capaColor.style.maskPosition       = vista.maskPosition;
+      $capaColor.style.webkitMaskRepeat   = vista.maskRepeat;
+      $capaColor.style.maskRepeat         = vista.maskRepeat;
+
+      /* color */
+      $capaColor.style.background = estado.colorGorra;
+
+      /* bordado */
+      $bordado.textContent = estado.texto;
+      $bordado.style.color = estado.colorBordado;
+
+      actualizarActivos();
+    }
+
+    /* ── Marcar swatch activo ── */
+    function actualizarActivos() {
+      document.querySelectorAll('#paleta-colores .swatch').forEach(s => {
+        s.classList.toggle('activo', s.dataset.color === estado.colorGorra);
+      });
+      document.querySelectorAll('#paleta-bordado .swatch').forEach(s => {
+        s.classList.toggle('activo', s.dataset.color === estado.colorBordado);
+      });
+    }
+
+    /* ── Generar paleta ── */
+    function generarPaleta($contenedor, colores, callback) {
+      colores.forEach(color => {
+        const btn = document.createElement('button');
+        btn.className = 'swatch';
+        btn.style.background = color;
+        btn.dataset.color = color;
+        btn.title = color;
+        btn.addEventListener('click', () => {
+          callback(color);
+          render();
+        });
+        $contenedor.appendChild(btn);
+      });
+    }
+
+    /* ── Listeners ── */
+    $inputTexto.addEventListener('input', e => {
+      estado.texto = e.target.value.toUpperCase().slice(0, 12);
+      e.target.value = estado.texto;
+      render();
+    });
+
+    $btnReset.addEventListener('click', () => {
+      estado = { colorGorra: '#FFFFFF', colorBordado: '#FFFFFF', texto: '', logoSrc: '', vistaActual: 'frente' };
+      $inputTexto.value = '';
+      $logo.src = '';
+      $logo.classList.remove('visible');
+      $inputLogo.value = '';
+      document.querySelectorAll('.thumb-vista').forEach(b => b.classList.remove('activo'));
+      document.querySelector('.thumb-vista[data-vista="frente"]').classList.add('activo');
+      render();
+    });
+
+    /* ── Selector de vistas ── */
+    document.querySelectorAll('.thumb-vista').forEach(btn => {
+      btn.addEventListener('click', () => {
+        estado.vistaActual = btn.dataset.vista;
+        document.querySelectorAll('.thumb-vista').forEach(b => b.classList.remove('activo'));
+        btn.classList.add('activo');
+        render();
+      });
+    });
+
+    /* ── Subir logo ── */
+    $inputLogo.addEventListener('change', (e) => {
+      const archivo = e.target.files[0];
+      if (!archivo) return;
+
+      if (!archivo.type.includes('png') && !archivo.type.includes('svg')) {
+        alert('Por favor sube solo archivos PNG o SVG con fondo transparente.');
+        return;
+      }
+
+      if (archivo.size > 2 * 1024 * 1024) {
+        alert('El archivo es muy grande. Máximo 2MB.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        $logo.src = event.target.result;
+        $logo.classList.add('visible');
+        estado.logoSrc = event.target.result;
+      };
+      reader.readAsDataURL(archivo);
+    });
+
+    $btnQuitarLogo.addEventListener('click', () => {
+      $logo.src = '';
+      $logo.classList.remove('visible');
+      $inputLogo.value = '';
+      estado.logoSrc = '';
+    });
+
+    /* ── Inicializar ── */
+    generarPaleta(
+      document.getElementById('paleta-colores'),
+      COLORES_GORRA,
+      color => { estado.colorGorra = color; }
+    );
+
+    generarPaleta(
+      document.getElementById('paleta-bordado'),
+      COLORES_BORDADO,
+      color => { estado.colorBordado = color; }
+    );
+
+    render();
+  </script>
+
+</body>
+</html>
