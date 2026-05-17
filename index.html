@@ -138,32 +138,68 @@
         <div class="configurador__preview">
           <div class="preview__marco">
             <div id="configurador-svg">
-              <!-- Canvas en capas: base + tinte + bordado -->
+              <!-- Canvas en capas: base + tinte + logo + bordado -->
               <div class="gorra-canvas">
                 <img class="gorra-canvas__base" src="img/gorra_blanca_fondo_blanco_de_lado_puma.png" alt="Vista previa de tu gorra">
                 <div class="gorra-canvas__color"></div>
-                <span class="gorra-canvas__bordado"></span>
+                <img class="gorra-canvas__logo" id="preview-logo" src="" alt="Logo personalizado">
+                <!-- Bordado SVG: texto curvo sobre arco, solo visible en vista frente -->
+                <svg class="gorra-canvas__bordado"
+                     viewBox="0 0 500 85"
+                     xmlns="http://www.w3.org/2000/svg"
+                     preserveAspectRatio="xMidYMid meet"
+                     overflow="visible">
+                  <defs>
+                    <path id="arco-bordado" d="M 20 75 Q 250 38 480 75" />
+                  </defs>
+                  <text id="texto-bordado"
+                        font-family="'Arial Black','Helvetica Neue',sans-serif"
+                        font-size="26"
+                        font-weight="900"
+                        letter-spacing="3"
+                        text-anchor="middle"
+                        fill="#ffffff">
+                    <textPath href="#arco-bordado" startOffset="50%"></textPath>
+                  </text>
+                </svg>
               </div>
             </div>
           </div>
 
-          <!-- Miniaturas de vista — Funcionalidad pendiente: cambio de vista -->
-          <div class="preview__thumbs">
-            <button class="thumb thumb--disabled activo" data-src="img/gorra_blanca_fondo_blanco_de_lado_puma.png" aria-label="Vista lateral" disabled>
-              <img src="img/gorra_blanca_fondo_blanco_de_lado_puma.png" alt="Lateral" />
-              <span>Lateral</span>
-            </button>
-            <button class="thumb thumb--disabled" data-src="img/gorra_blanca_fondo_blanco_de_frente_puma.png" aria-label="Vista de frente" disabled>
-              <img src="img/gorra_blanca_fondo_blanco_de_frente_puma.png" alt="Frente" />
-              <span>Frente</span>
-            </button>
-          </div>
-
-          <!-- Selector de modelo — Funcionalidad pendiente: modelo Normal -->
+          <!-- Selector de modelo + vista combinados -->
           <div class="selector-modelo">
             <span class="selector-modelo__label">Modelo:</span>
-            <button class="btn-modelo btn-modelo--disabled" data-modelo="normal" disabled>Normal</button>
-            <button class="btn-modelo activo" data-modelo="puma">Puma</button>
+            <div class="selector-modelo__opciones">
+
+              <div class="selector-modelo__grupo">
+                <p class="selector-modelo__nombre">Normal</p>
+                <div class="selector-modelo__vistas">
+                  <button class="btn-modelo-vista" data-modelo="normal" data-vista="lateral">
+                    <img src="img/gorra_blanca_fondo_blanco.png" alt="Normal lateral">
+                    <span>Lateral</span>
+                  </button>
+                  <button class="btn-modelo-vista" data-modelo="normal" data-vista="frente">
+                    <img src="img/gorra_blanca_fondo_blanco_de_frente.png" alt="Normal frente">
+                    <span>Frente</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="selector-modelo__grupo">
+                <p class="selector-modelo__nombre">Puma</p>
+                <div class="selector-modelo__vistas">
+                  <button class="btn-modelo-vista activo" data-modelo="puma" data-vista="lateral">
+                    <img src="img/gorra_blanca_fondo_blanco_de_lado_puma.png" alt="Puma lateral">
+                    <span>Lateral</span>
+                  </button>
+                  <button class="btn-modelo-vista" data-modelo="puma" data-vista="frente">
+                    <img src="img/gorra_blanca_fondo_blanco_de_frente_puma.png" alt="Puma frente">
+                    <span>Frente</span>
+                  </button>
+                </div>
+              </div>
+
+            </div>
           </div>
         </div>
 
@@ -177,13 +213,26 @@
 
           <div class="panel__divisor"></div>
 
-          <!-- Color de la gorra (unificado: cuerpo + visera + ojete) -->
+          <!-- Color de la gorra -->
           <div class="control-grupo">
             <label class="control-label">
               <span class="control-label__punto"></span>
               Color de la gorra
             </label>
             <div class="paleta" id="paleta-cuerpo"></div>
+            <div class="color-custom">
+              <input
+                type="color"
+                id="input-color-custom"
+                class="input-color-custom"
+                value="#ffffff"
+                title="Elige un color personalizado"
+              />
+              <div class="color-custom__info">
+                <span class="color-custom__etiqueta">RGB personalizado</span>
+                <span class="color-custom__hex" id="color-custom-hex">#FFFFFF</span>
+              </div>
+            </div>
           </div>
 
           <!-- Paletas separadas (visera, ojete) removidas en iteración 1. Reactivar si se requiere control granular. -->
@@ -212,6 +261,30 @@
               Color del bordado
             </label>
             <div class="paleta" id="paleta-bordado"></div>
+            <div class="color-custom">
+              <input
+                type="color"
+                id="input-color-bordado-custom"
+                class="input-color-custom"
+                value="#ffffff"
+                title="Elige un color personalizado para el bordado"
+              />
+              <div class="color-custom__info">
+                <span class="color-custom__etiqueta">RGB personalizado</span>
+                <span class="color-custom__hex" id="color-bordado-hex">#FFFFFF</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Logo propio -->
+          <div class="control-grupo" id="seccion-logo">
+            <label class="control-label">
+              <span class="control-label__punto"></span>
+              Logo propio
+            </label>
+            <label class="btn btn--ghost btn--full" for="input-logo">Subir logo (PNG / SVG) →</label>
+            <input type="file" id="input-logo" accept="image/png,image/svg+xml" class="input-logo-file">
+            <button type="button" id="btn-quitar-logo" class="btn-quitar-logo">Quitar logo ×</button>
           </div>
 
           <div class="panel__divisor"></div>
@@ -310,6 +383,22 @@
       <p class="footer__copy">Hecho a mano. Diseñado por ti.</p>
     </div>
   </footer>
+
+  <!-- Filtro SVG para efecto bordado realista -->
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+    <defs>
+      <filter id="filtro-bordado" x="-8%" y="-30%" width="116%" height="160%" color-interpolation-filters="sRGB">
+        <!-- Ruido fractal: simula irregularidad del hilo -->
+        <feTurbulence type="fractalNoise" baseFrequency="0.04 0.08" numOctaves="4" seed="12" result="noise"/>
+        <!-- Desplaza bordes según ruido: zig-zag de puntadas -->
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.2" xChannelSelector="R" yChannelSelector="G" result="rough"/>
+        <!-- Suavizado mínimo para evitar pixelado -->
+        <feGaussianBlur in="rough" stdDeviation="0.3" result="soft"/>
+        <!-- Recorta al contorno original del texto -->
+        <feComposite in="soft" in2="SourceGraphic" operator="in"/>
+      </filter>
+    </defs>
+  </svg>
 
   <script src="js/configurador.js"></script>
   <script src="js/tema.js"></script>
