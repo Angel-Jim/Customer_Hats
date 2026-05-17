@@ -180,9 +180,48 @@
 
     button:hover { background: rgba(255,255,255,0.1); }
 
+    /* ── Selector de modelos ── */
+    .selector-modelos {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .btn-modelo {
+      padding: 0.5rem 1.5rem;
+      border-radius: 20px;
+      border: 2px solid rgba(255,255,255,0.3);
+      background: transparent;
+      color: white;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-modelo.activo {
+      border-color: white;
+      background: rgba(255,255,255,0.15);
+    }
+
+    .btn-modelo:hover {
+      border-color: rgba(255,255,255,0.6);
+    }
+
   </style>
 </head>
 <body>
+
+  <!-- Selector de modelos -->
+  <div class="selector-modelos">
+    <button class="btn-modelo activo" data-modelo="sinLogo">
+      Clásica
+    </button>
+    <button class="btn-modelo" data-modelo="puma">
+      Puma Edition
+    </button>
+  </div>
 
   <!-- Selector de vistas -->
   <div class="selector-vistas">
@@ -214,9 +253,11 @@
     <label>Color de la gorra:</label>
     <div class="paleta" id="paleta-colores"></div>
 
-    <label>Logo (PNG con fondo transparente):</label>
-    <input type="file" id="input-logo" accept="image/png,image/svg+xml">
-    <button id="btn-quitar-logo">Quitar logo</button>
+    <div id="seccion-logo" style="display:flex; flex-direction:column; align-items:center; gap:0.75rem;">
+      <label>Logo (PNG con fondo transparente):</label>
+      <input type="file" id="input-logo" accept="image/png,image/svg+xml">
+      <button id="btn-quitar-logo">Quitar logo</button>
+    </div>
 
     <label>Texto bordado:</label>
     <input
@@ -257,30 +298,55 @@
       '#C0392B', // Rojo
     ];
 
-    const VISTAS = {
-      frente: {
-        imagen:       'img/gorra_blanca_fondo_blanco_de_frente.png',
-        mascara:      'img/mascaras/gorra-frente-mascara.svg',
-        maskSize:     'auto 90%',
-        maskPosition: 'center',
-        maskRepeat:   'no-repeat',
+    const MODELOS = {
+      sinLogo: {
+        nombre: 'Clásica',
+        vistas: {
+          frente: {
+            imagen:       'img/gorra_blanca_fondo_blanco_de_frente.png',
+            mascara:      'img/mascaras/gorra-frente-mascara.svg',
+            maskSize:     'auto 90%',
+            maskPosition: 'center',
+            maskRepeat:   'no-repeat',
+          },
+          lateral: {
+            imagen:       'img/gorra_blanca_fondo_blanco.png',
+            mascara:      'img/mascaras/gorra-lateral-mascara.svg',
+            maskSize:     '100% 100%',
+            maskPosition: 'center',
+            maskRepeat:   'no-repeat',
+          }
+        }
       },
-      lateral: {
-        imagen:       'img/gorra_blanca_fondo_blanco.png',
-        mascara:      'img/mascaras/gorra-lateral-mascara.svg',
-        maskSize:     '100% 100%',
-        maskPosition: 'center',
-        maskRepeat:   'no-repeat',
+      puma: {
+        nombre: 'Puma Edition',
+        vistas: {
+          frente: {
+            imagen:       'img/gorra_blanca_fondo_blanco_de_frente_puma.png',
+            mascara:      'img/mascaras/gorra-puma-frente-mascara.svg',
+            maskSize:     'auto 90%',
+            maskPosition: 'center',
+            maskRepeat:   'no-repeat',
+          },
+          lateral: {
+            imagen:       'img/gorra_blanca_fondo_blanco_de_lado_puma.png',
+            mascara:      'img/mascaras/gorra-puma-lateral-mascara.svg',
+            maskSize:     '100% 100%',
+            maskPosition: 'center',
+            maskRepeat:   'no-repeat',
+          }
+        }
       }
     };
 
     // Estado
     let estado = {
-      colorGorra:   '#FFFFFF',
-      colorBordado: '#FFFFFF',
-      texto: '',
-      logoSrc: '',
-      vistaActual: 'frente',
+      modeloActual:  'sinLogo',
+      vistaActual:   'frente',
+      colorGorra:    '#FFFFFF',
+      colorBordado:  '#FFFFFF',
+      texto:         '',
+      logoSrc:       '',
     };
 
     // Referencias DOM
@@ -294,12 +360,13 @@
 
     /* ── Render ── */
     function render() {
-      const vista = VISTAS[estado.vistaActual];
+      const modelo = MODELOS[estado.modeloActual];
+      const vista  = modelo.vistas[estado.vistaActual];
 
       /* imagen base */
       document.querySelector('.gorra-canvas__base').src = vista.imagen;
 
-      /* máscara — todos los valores dinámicos por vista */
+      /* máscara completa por vista */
       $capaColor.style.webkitMaskImage    = "url('" + vista.mascara + "')";
       $capaColor.style.maskImage          = "url('" + vista.mascara + "')";
       $capaColor.style.webkitMaskSize     = vista.maskSize;
@@ -316,7 +383,40 @@
       $bordado.textContent = estado.texto;
       $bordado.style.color = estado.colorBordado;
 
+      /* logo — solo visible en modelo sinLogo */
+      const $logoEl = document.getElementById('preview-logo');
+      const $seccionLogo = document.getElementById('seccion-logo');
+      if (estado.modeloActual === 'puma') {
+        if ($logoEl) {
+          $logoEl.src = '';
+          $logoEl.classList.remove('visible');
+        }
+        if ($seccionLogo) $seccionLogo.style.display = 'none';
+      } else {
+        if ($seccionLogo) $seccionLogo.style.display = 'flex';
+      }
+
+      /* thumbnails de vista — actualizar imágenes según modelo */
+      document.querySelectorAll('.thumb-vista').forEach(btn => {
+        const v = btn.dataset.vista;
+        const img = btn.querySelector('img');
+        if (img && modelo.vistas[v]) {
+          img.src = modelo.vistas[v].imagen;
+        }
+      });
+
       actualizarActivos();
+      actualizarModeloActivo();
+    }
+
+    /* ── Marcar modelo activo ── */
+    function actualizarModeloActivo() {
+      document.querySelectorAll('.btn-modelo').forEach(btn => {
+        btn.classList.toggle(
+          'activo',
+          btn.dataset.modelo === estado.modeloActual
+        );
+      });
     }
 
     /* ── Marcar swatch activo ── */
@@ -353,14 +453,48 @@
     });
 
     $btnReset.addEventListener('click', () => {
-      estado = { colorGorra: '#FFFFFF', colorBordado: '#FFFFFF', texto: '', logoSrc: '', vistaActual: 'frente' };
+      estado = {
+        modeloActual:  'sinLogo',
+        vistaActual:   'frente',
+        colorGorra:    '#FFFFFF',
+        colorBordado:  '#FFFFFF',
+        texto:         '',
+        logoSrc:       '',
+      };
       $inputTexto.value = '';
-      $logo.src = '';
-      $logo.classList.remove('visible');
+      const $logoEl = document.getElementById('preview-logo');
+      if ($logoEl) {
+        $logoEl.src = '';
+        $logoEl.classList.remove('visible');
+      }
       $inputLogo.value = '';
-      document.querySelectorAll('.thumb-vista').forEach(b => b.classList.remove('activo'));
-      document.querySelector('.thumb-vista[data-vista="frente"]').classList.add('activo');
+      document.querySelectorAll('.thumb-vista').forEach(b =>
+        b.classList.remove('activo')
+      );
+      document.querySelector('.thumb-vista[data-vista="frente"]')
+        .classList.add('activo');
+      document.querySelectorAll('.btn-modelo').forEach(b =>
+        b.classList.remove('activo')
+      );
+      document.querySelector('.btn-modelo[data-modelo="sinLogo"]')
+        .classList.add('activo');
       render();
+    });
+
+    /* ── Selector de modelos ── */
+    document.querySelectorAll('.btn-modelo').forEach(btn => {
+      btn.addEventListener('click', () => {
+        estado.modeloActual = btn.dataset.modelo;
+        estado.vistaActual  = 'frente';
+
+        document.querySelectorAll('.thumb-vista').forEach(b =>
+          b.classList.remove('activo')
+        );
+        document.querySelector('.thumb-vista[data-vista="frente"]')
+          .classList.add('activo');
+
+        render();
+      });
     });
 
     /* ── Selector de vistas ── */
