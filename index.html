@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Young Hats — Diseña tu gorra</title>
+  <link rel="icon" type="image/png" href="img/LOGO YH.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gyastatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -59,8 +60,8 @@
         <!-- Gorra hero -->
         <div class="hero__visual">
           <img
-            src="img/gorra_blanca_fondo_blanco.png"
-            alt="Gorra Young Hats vista lateral"
+            src="img/LOGO YH.png"
+            alt="Logo Young Hats"
             class="hero__img"
           />
           <div class="hero__deco" aria-hidden="true">
@@ -400,8 +401,26 @@
     </defs>
   </svg>
 
+  <!-- Toast de confirmación de pedido -->
+  <div id="toast-pedido" class="toast" aria-live="polite">
+    <span class="toast__icono">✓</span>
+    <div>
+      <strong>¡Pedido recibido!</strong>
+      <p>Te contactaremos en menos de 24 horas.</p>
+    </div>
+  </div>
+
   <script src="js/configurador.js"></script>
   <script src="js/tema.js"></script>
+  <script>
+    document.querySelector('.cta-final__form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var toast = document.getElementById('toast-pedido');
+      toast.classList.add('toast--visible');
+      setTimeout(function () { toast.classList.remove('toast--visible'); }, 4000);
+      this.reset();
+    });
+  </script>
 
 </body>
 </html>

@@ -1233,6 +1233,44 @@ body, .header, .btn-tema, .configurador__panel,
 /* Input de archivo oculto (activado por label) */
 .input-logo-file { display: none; }
 
+/* ═══════════════════ TOAST NOTIFICACIÓN ═══════════════════ */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--acento);
+  color: #fff;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  transform: translateY(120%);
+  opacity: 0;
+  transition: transform 0.35s ease, opacity 0.35s ease;
+  pointer-events: none;
+}
+.toast--visible {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+.toast__icono {
+  font-size: 1.5rem;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  width: 2.2rem;
+  height: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.toast strong { display: block; font-size: 1rem; }
+.toast p { margin: 0; font-size: 0.85rem; opacity: 0.85; }
+
 /* Botón quitar logo — oculto hasta que haya logo cargado */
 .btn-quitar-logo {
   display: none;
